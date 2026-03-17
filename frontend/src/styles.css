@@ -165,12 +165,49 @@ button:disabled {
   margin-top: 0;
 }
 
+.method-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.method-item {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #d6ebe6;
+  background: #f9fffd;
+}
+
+.method-item strong {
+  margin-left: 8px;
+}
+
+.method-item p {
+  margin: 6px 0 0;
+  font-size: 0.92rem;
+}
+
+.method-badge {
+  display: inline-block;
+  min-width: 64px;
+  text-align: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--teal);
+}
+
 .entry-panel {
   grid-column: 1 / -1;
 }
 
 .entry-form {
-  max-width: 620px;
+  max-width: 720px;
   display: grid;
   gap: 12px;
 }
@@ -178,6 +215,12 @@ button:disabled {
 .field {
   display: grid;
   gap: 6px;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .card-list {
@@ -204,6 +247,12 @@ button:disabled {
   line-height: 1.5;
 }
 
+.card button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
 .guide-list {
   margin: 0;
   padding-left: 18px;
@@ -217,6 +266,24 @@ button:disabled {
   font-size: 0.88rem;
   color: #29505b;
   word-break: break-word;
+}
+
+.code-block {
+  margin: 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #132833;
+  color: #eff8fb;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.empty-state {
+  margin: 0;
+  color: #2c5864;
 }
 
 .reveal {
