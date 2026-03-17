@@ -19,30 +19,59 @@ async function readResponseBody(response) {
   }
 }
 
-export async function getHealth(baseUrl = DEFAULT_API_BASE_URL) {
-  const response = await fetch(`${normalizeBaseUrl(baseUrl)}/health`);
+async function requestJson(path, options = {}, baseUrl = DEFAULT_API_BASE_URL) {
+  const response = await fetch(`${normalizeBaseUrl(baseUrl)}${path}`, options);
   const data = await readResponseBody(response);
 
   if (!response.ok) {
-    throw new Error(data.message || "Unable to reach API.");
+    throw new Error(data.message || `Request failed (${response.status}).`);
   }
 
   return data;
 }
 
+export async function getHealth(baseUrl = DEFAULT_API_BASE_URL) {
+  return requestJson("/health", {}, baseUrl);
+}
+
+export async function getEntries(baseUrl = DEFAULT_API_BASE_URL) {
+  return requestJson("/entries", {}, baseUrl);
+}
+
 export async function createEntry(payload, baseUrl = DEFAULT_API_BASE_URL) {
-  const response = await fetch(`${normalizeBaseUrl(baseUrl)}/entries`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  return requestJson(
+    "/entries",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
-  const data = await readResponseBody(response);
+    baseUrl
+  );
+}
 
-  if (!response.ok) {
-    throw new Error(data.message || "Unable to create entry.");
-  }
+export async function updateEntry(id, payload, baseUrl = DEFAULT_API_BASE_URL) {
+  return requestJson(
+    `/entries/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
+    baseUrl
+  );
+}
 
-  return data;
+export async function deleteEntry(id, baseUrl = DEFAULT_API_BASE_URL) {
+  return requestJson(
+    `/entries/${id}`,
+    {
+      method: "DELETE",
+    },
+    baseUrl
+  );
 }
