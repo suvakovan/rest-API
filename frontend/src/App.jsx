@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getHealth } from "./api";
+import { createEntry, DEFAULT_API_BASE_URL, getHealth } from "./api";
 
 const frontendStructure = [
   {
@@ -32,19 +32,50 @@ const frontendGuidelines = [
 ];
 
 export default function App() {
+  const [apiBaseUrl, setApiBaseUrl] = useState(DEFAULT_API_BASE_URL);
   const [apiStatus, setApiStatus] = useState("Not checked");
   const [isChecking, setIsChecking] = useState(false);
+  const [entryTitle, setEntryTitle] = useState("");
+  const [entryNote, setEntryNote] = useState("");
+  const [entryStatus, setEntryStatus] = useState("No entry submitted");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const checkApi = async () => {
     setIsChecking(true);
 
     try {
-      const data = await getHealth();
+      const data = await getHealth(apiBaseUrl);
       setApiStatus(data.status ? `Connected: ${data.status}` : "Connected");
     } catch (error) {
       setApiStatus(error.message);
     } finally {
       setIsChecking(false);
+    }
+  };
+
+  const submitEntry = async (event) => {
+    event.preventDefault();
+
+    const title = entryTitle.trim();
+    const note = entryNote.trim();
+
+    if (!title || !note) {
+      setEntryStatus("Title and note are required.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const data = await createEntry({ title, note }, apiBaseUrl);
+      const entryId = data.id || data.entryId || "created";
+      setEntryStatus(`Entry saved (${entryId}).`);
+      setEntryTitle("");
+      setEntryNote("");
+    } catch (error) {
+      setEntryStatus(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -60,6 +91,17 @@ export default function App() {
           This starter keeps the structure clear: UI in components, API calls in
           one place, and configuration in environment variables.
         </p>
+
+        <div className="api-base-url">
+          <label htmlFor="api-base-url">Backend base URL</label>
+          <input
+            id="api-base-url"
+            type="url"
+            value={apiBaseUrl}
+            onChange={(event) => setApiBaseUrl(event.target.value)}
+            placeholder="http://localhost:3000"
+          />
+        </div>
 
         <button type="button" onClick={checkApi} disabled={isChecking}>
           {isChecking ? "Checking..." : "Check API Connection"}
@@ -90,6 +132,46 @@ export default function App() {
               <li key={item}>{item}</li>
             ))}
           </ul>
+        </section>
+
+        <section className="panel reveal delay-2 entry-panel">
+          <h2>Simple Backend Entry</h2>
+          <p>
+            Submit a basic payload to your backend <strong>/entries</strong>
+            endpoint.
+          </p>
+
+          <form className="entry-form" onSubmit={submitEntry}>
+            <div className="field">
+              <label htmlFor="entry-title">Title</label>
+              <input
+                id="entry-title"
+                type="text"
+                value={entryTitle}
+                onChange={(event) => setEntryTitle(event.target.value)}
+                placeholder="Example: First API entry"
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="entry-note">Note</label>
+              <textarea
+                id="entry-note"
+                value={entryNote}
+                onChange={(event) => setEntryNote(event.target.value)}
+                placeholder="Type a short note to send to the backend"
+              />
+            </div>
+
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit Entry"}
+            </button>
+          </form>
+
+          <p className="status">
+            Entry status: <strong>{entryStatus}</strong>
+          </p>
+          <p className="hint">Target endpoint: {apiBaseUrl}/entries</p>
         </section>
       </main>
     </div>
