@@ -90,6 +90,41 @@ h1 {
   line-height: 1.7;
 }
 
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+  color: inherit;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  border-color: var(--teal);
+  outline: 3px solid rgba(11, 110, 122, 0.2);
+  outline-offset: 1px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.api-base-url {
+  max-width: 520px;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
 button {
   border: none;
   border-radius: 999px;
@@ -130,6 +165,21 @@ button:disabled {
   margin-top: 0;
 }
 
+.entry-panel {
+  grid-column: 1 / -1;
+}
+
+.entry-form {
+  max-width: 620px;
+  display: grid;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
 .card-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -160,6 +210,13 @@ button:disabled {
   display: grid;
   gap: 10px;
   line-height: 1.5;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+  color: #29505b;
+  word-break: break-word;
 }
 
 .reveal {
